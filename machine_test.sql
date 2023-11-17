@@ -1,3 +1,5 @@
+ 
+--  1
  CREATE TABLE tbl_stock (
     pk_int_stock_id SERIAL PRIMARY KEY ,
     vchr_name VARCHAR(100),
@@ -20,7 +22,7 @@ Indexes:
 
 
 
-
+-- 2
 ALTER TABLE tbl_stock ALTER COLUMN int_price TYPE FLOAT;
 
 -- output
@@ -38,7 +40,7 @@ Indexes:
 
 
 
-
+-- 3
 CREATE TABLE tbl_supplier (
     pk_int_supplier_id SERIAL PRIMARY KEY,
     vchr_supplier_name VARCHAR(25)
@@ -56,7 +58,7 @@ Indexes:
 
 
 
-
+-- 4
 ALTER TABLE tbl_stock ADD COLUMN fk_int_supplier INT;
 -- output
 machine_test=# \d tbl_supplier;
@@ -70,11 +72,11 @@ Indexes:
 
 
 
-
+-- 5
     ALTER TABLE tbl_stock add constraint fk_int_supplier FOREIGN KEY(fk_int_supplier)REFERENCES tbl_supplier(pk_int_supplier_id )
     ON DELETE CASCADE ON UPDATE CASCADE;
 -- ouput
-    machinetest=# \d tbl_stock
+    machine_test=# \d tbl_stock
                                                Table "public.tbl_stock"
      Column      |          Type          | Collation | Nullable |                      Default         
 -----------------+------------------------+-----------+----------+----------------------------------------------------
@@ -90,13 +92,14 @@ Foreign-key constraints:
 
 
 
-
+-- 6
 CREATE TABLE tbl_dept(
     pk_int_dept_id SERIAL PRIMARY KEY,
     vchr_dept_name VARCHAR(100)
     );
 
-    machinetest=# \d tbl_dept
+-- output
+    machine_test=# \d tbl_dept
                                               Table "public.tbl_dept"
      Column     |          Type          | Collation | Nullable |                     Default           
 ----------------+------------------------+-----------+----------+--------------------------------------------------
@@ -107,7 +110,7 @@ Indexes:
 
 
 
-
+-- 7
 CREATE TABLE tbl_classes(
     pk_int_class_id SERIAL PRIMARY KEY,
     vchr_class_name VARCHAR(20),
@@ -116,6 +119,7 @@ CREATE TABLE tbl_classes(
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- output
 machine_test=# \d tbl_classes
                                               Table "public.tbl_classes"
      Column      |         Type          | Collation | Nullable |                       Default         
@@ -130,7 +134,7 @@ Foreign-key constraints:
 
 
 
-
+-- 8
 CREATE TABLE tbl_enrollment(
     pk_int_enrollment_id SERIAL PRIMARY KEY,
     int_count INT,
@@ -139,7 +143,7 @@ CREATE TABLE tbl_enrollment(
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
+-- output
 machine_test=# \d tbl_enrollment
                                             Table "public.tbl_enrollment"
         Column        |  Type   | Collation | Nullable |                           Default              
@@ -153,9 +157,9 @@ Foreign-key constraints:
     "tbl_enrollment_fk_int_class_id_fkey" FOREIGN KEY (fk_int_class_id) REFERENCES tbl_classes(pk_int_class_id) ON UPDATE CASCADE ON DELETE CASCADE
 
 
-
+-- 9
 ALTER TABLE tbl_classes ADD CONSTRAINT unique_class_name UNIQUE(vchr_class_name);
-
+-- output
 machine_test=# \d tbl_classes
                                               Table "public.tbl_classes"
      Column      |         Type          | Collation | Nullable |                       Default         
@@ -173,9 +177,9 @@ Referenced by:
 
 
 
-
+-- 10
 ALTER TABLE tbl_dept ADD COLUMN vchr_dept_description VARCHAR(20);
-
+-- output
 machine_test=# \d tbl_dept
                                                  Table "public.tbl_dept"
         Column         |          Type          | Collation | Nullable |                     Default    
@@ -189,7 +193,7 @@ Referenced by:
     TABLE "tbl_classes" CONSTRAINT "tbl_classes_fk_int_dept_id_fkey" FOREIGN KEY (fk_int_dept_id) REFERENCES tbl_dept(pk_int_dept_id) ON UPDATE CASCADE ON DELETE CASCADE
 
 
-
+-- 11
 INSERT INTO tbl_supplier VALUES
    (1,'Logitech'),
    (2,'Samsung'),
@@ -197,6 +201,7 @@ INSERT INTO tbl_supplier VALUES
    (4,'LG'),
    (5,'Creative');
 
+-- output
    machine_test=# select * from tbl_supplier;
  pk_int_supplier_id | vchr_supplier_name
 --------------------+--------------------
@@ -209,7 +214,7 @@ INSERT INTO tbl_supplier VALUES
 
 
 
-
+-- 12
 INSERT INTO tbl_stock VALUES
 (1,'Mouse',10,500,1),
 (2,'Keyboard',5,450,3),
@@ -218,6 +223,7 @@ INSERT INTO tbl_stock VALUES
 (5,'Headphone',50,750,4),
 (6,'Memory',2,3500,4);
 
+-- output
 machine_test=# select * from tbl_stock;
  pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
 -----------------+-----------+--------------+-----------+-----------------
@@ -229,9 +235,9 @@ machine_test=# select * from tbl_stock;
                6 | Memory    |            2 |      3500 |               4
 (6 rows)
 
-
+-- 13
 UPDATE tbl_stock SET int_price = int_price + 1.50;
-
+-- output
 machine_test=# select * from tbl_stock;
  pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
 -----------------+-----------+--------------+-----------+-----------------
@@ -243,8 +249,10 @@ machine_test=# select * from tbl_stock;
                6 | Memory    |            2 |    3501.5 |               4
 (6 rows)
 
+-- 14
 SELECT * FROM tbl_stock WHERE int_price > 1000;
 
+-- output
 pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
 -----------------+-----------+--------------+-----------+-----------------
                3 | Modem     |           10 |    1201.5 |               2
@@ -252,8 +260,10 @@ pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
                6 | Memory    |            2 |    3501.5 |               4
 (3 rows)
 
+-- 15
 SELECT * FROM tbl_stock  ORDER BY vchr_name;
 
+-- output
  pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
 -----------------+-----------+--------------+-----------+-----------------
                5 | Headphone |           50 |     751.5 |               4
@@ -264,8 +274,10 @@ SELECT * FROM tbl_stock  ORDER BY vchr_name;
                1 | Mouse     |           10 |     501.5 |               1
 (6 rows)
 
+-- 16
 SELECT * FROM tbl_stock  ORDER BY vchr_name LIMIT 3;
 
+-- output
  pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
 -----------------+-----------+--------------+-----------+-----------------
                5 | Headphone |           50 |     751.5 |               4
@@ -273,8 +285,9 @@ SELECT * FROM tbl_stock  ORDER BY vchr_name LIMIT 3;
                4 | Memory    |          100 |    1501.5 |               5
 (3 rows)
 
+-- 17
 SELECT * FROM tbl_stock ORDER BY vchr_name DESC LIMIT 3;
-
+-- output
  pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
 -----------------+-----------+--------------+-----------+-----------------
                1 | Mouse     |           10 |     501.5 |               1
@@ -282,8 +295,9 @@ SELECT * FROM tbl_stock ORDER BY vchr_name DESC LIMIT 3;
                4 | Memory    |          100 |    1501.5 |               5
 (3 rows)
 
-SELECT vchr_name,int_quantity int_price,(int_quantity*int_price)AS int_quantity*int_price FROM tbl_stock;
-
+-- 18
+SELECT vchr_name,int_quantity int_price,(int_quantity*int_price)AS int_quantity_int_price FROM tbl_stock;
+-- output
 vchr_name | int_price | int_quantity_int_price
 -----------+-----------+------------------------
  Mouse     |        10 |                   5015
@@ -294,9 +308,10 @@ vchr_name | int_price | int_quantity_int_price
  Memory    |         2 |                   7003
 (6 rows)
 
+-- 19
 DELETE FROM tbl_stock WHERE fk_int_supplier = 5;
-
-machinetest=# select * from tbl_stock;
+-- output
+machine_test=# select * from tbl_stock;
  pk_int_stock_id | vchr_name | int_quantity | int_price | fk_int_supplier
 -----------------+-----------+--------------+-----------+-----------------
                1 | Mouse     |           10 |     501.5 |               1
@@ -305,13 +320,14 @@ machinetest=# select * from tbl_stock;
                5 | Headphone |           50 |     751.5 |               4
                6 | Memory    |            2 |    3501.5 |               4
 (5 rows)
-
+-- 20
 INSERT INTO tbl_dept VALUES
 (1,'Computer Science','CS'),
 (2,'Electrinics','EC'),
 (3,'Commerce','CC'),
 (4,'Arts','AR');
 
+-- output
 machine_test=# select * from tbl_dept;
  pk_int_dept_id |  vchr_dept_name  | vchr_dept_description
 ----------------+------------------+-----------------------
